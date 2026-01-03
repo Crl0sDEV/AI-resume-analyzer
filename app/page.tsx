@@ -33,6 +33,12 @@ export default function ResumeAnalyzer() {
         body: formData,
       });
 
+      if (response.status === 429) {
+        alert("You have reached the free limit. Please try again in 60 seconds.");
+        setLoading(false);
+        return;
+      }
+
       if (!response.ok) {
         throw new Error("Failed to analyze");
       }
