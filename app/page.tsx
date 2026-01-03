@@ -27,7 +27,6 @@ export default function ResumeAnalyzer() {
 
   const [rewriting, setRewriting] = useState(false);
   const [interviewLoading, setInterviewLoading] = useState(false);
-  
   const [interviewQuestions, setInterviewQuestions] = useState<InterviewQuestion[]>([]);
 
   useEffect(() => {
@@ -44,6 +43,16 @@ export default function ResumeAnalyzer() {
       const url = URL.createObjectURL(selectedFile);
       setPdfPreviewUrl(url);
     }
+  };
+
+  const triggerConfetti = () => {
+    confetti({
+      particleCount: 150,
+      spread: 70,
+      origin: { y: 0.6 },
+      zIndex: 9999,
+      colors: ['#22c55e', '#3b82f6', '#f59e0b']
+    });
   };
 
   const handleAnalyze = async () => {
@@ -75,12 +84,7 @@ export default function ResumeAnalyzer() {
       setResult(data);
 
       if (data.score >= 80) {
-        confetti({
-          particleCount: 150,
-          spread: 70,
-          origin: { y: 0.6 },
-          colors: ['#22c55e', '#3b82f6', '#f59e0b']
-        });
+        triggerConfetti();
       }
 
       const newHistory = [data, ...history].slice(0, 3);
@@ -88,9 +92,64 @@ export default function ResumeAnalyzer() {
       localStorage.setItem("resumeHistory", JSON.stringify(newHistory));
 
     } catch (error) {
-      // 3. Log the error so it's "used"
       console.error("Analysis Error:", error);
       alert("Something went wrong analyzing the resume.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDemo = async () => {
+
+    const sampleJd = `We are looking for a Senior React Developer with experience in Next.js, Tailwind CSS, and TypeScript. 
+    The candidate should have strong knowledge of state management, API integration, and performance optimization. 
+    Bonus points for AWS and CI/CD experience.`;
+    
+    setJd(sampleJd);
+    setLoading(true);
+
+    try {
+     
+      const response = await fetch("/sample-resume.pdf");
+      if (!response.ok) throw new Error("Sample resume not found in public folder");
+      
+      const blob = await response.blob();
+      const demoFile = new File([blob], "sample-resume.pdf", { type: "application/pdf" });
+
+      setFile(demoFile);
+      setPdfPreviewUrl(URL.createObjectURL(demoFile));
+
+      const formData = new FormData();
+      formData.append("resume", demoFile);
+      formData.append("jd", sampleJd);
+
+      const apiRes = await fetch("/api/analyze", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (apiRes.status === 429) {
+        alert("Rate limit reached. Please wait.");
+        setLoading(false);
+        return;
+      }
+
+      if (!apiRes.ok) throw new Error("Demo analysis failed");
+
+      const data = await apiRes.json();
+      setResult(data);
+
+      if (data.score >= 80) {
+        triggerConfetti();
+      }
+      
+      const newHistory = [data, ...history].slice(0, 3);
+      setHistory(newHistory);
+      localStorage.setItem("resumeHistory", JSON.stringify(newHistory));
+
+    } catch (error) {
+      console.error("Demo Error:", error);
+      alert("Failed to load demo. Make sure sample-resume.pdf is in public folder.");
     } finally {
       setLoading(false);
     }
@@ -151,8 +210,8 @@ export default function ResumeAnalyzer() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans text-slate-900">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans text-slate-900 flex flex-col">
+      <div className="max-w-7xl mx-auto space-y-8 grow w-full">
         
         {/* Header */}
         <div className="text-center space-y-2 mb-8">
@@ -198,7 +257,7 @@ export default function ResumeAnalyzer() {
                   />
                 </div>
               </CardContent>
-              <CardFooter>
+              <CardFooter className="flex flex-col gap-3">
                 <Button 
                   className="w-full bg-slate-900 hover:bg-slate-800" 
                   onClick={handleAnalyze} 
@@ -210,6 +269,17 @@ export default function ResumeAnalyzer() {
                     <><Upload className="mr-2 h-4 w-4" /> Analyze Resume</>
                   )}
                 </Button>
+
+                {/* DEMO BUTTON */}
+                {!result && !loading && (
+                    <Button 
+                        variant="ghost" 
+                        className="w-full text-slate-500 hover:text-blue-600 hover:bg-blue-50"
+                        onClick={handleDemo}
+                    >
+                        No resume? Try Sample Analysis
+                    </Button>
+                )}
               </CardFooter>
             </Card>
 
@@ -454,6 +524,21 @@ export default function ResumeAnalyzer() {
           )}
         </div>
       </div>
+
+      {/* FOOTER */}
+      <footer className="mt-12 text-center text-slate-400 text-sm py-6 border-t border-slate-100">
+        <p>
+          Built with Next.js, Gemini AI & Shadcn UI by{" "}
+          <a 
+            href="https://carlos-miguel-sandrino-portfolio.vercel.app/"
+            target="_blank" 
+            className="font-medium text-blue-600 hover:underline"
+          >
+            Carlos Sandrino
+          </a>
+        </p>
+      </footer>
+
     </div>
   );
 }
