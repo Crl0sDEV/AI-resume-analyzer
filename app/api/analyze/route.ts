@@ -66,6 +66,8 @@ export async function POST(req: NextRequest) {
       {
         "score": number (0-100),
         "matchLevel": "Low" | "Medium" | "High",
+        "candidateLevel": "Junior" | "Mid-Level" | "Senior" | "Lead",
+        "estimatedSalaryRange": "string (e.g., 'PHP 30k - 50k' or '$60k - $80k' based on location/context)",
         "breakdown": {
             "skillsMatch": number (0-100),
             "experienceMatch": number (0-100),
@@ -77,10 +79,10 @@ export async function POST(req: NextRequest) {
         },
         "redFlags": ["typo in header", "employment gap without explanation", "generic summary"],
         "actionPlan": [
-            "Specific advice 1 (e.g., Move Skills section to top)",
-            "Specific advice 2 (e.g., Quantify your sales achievement)"
+            "Specific advice 1",
+            "Specific advice 2"
         ],
-        "summaryProfile": "A 1-sentence summary of who this candidate seems to be (e.g., 'A Junior React Dev with strong potential but lacks AWS experience')."
+        "summaryProfile": "A 1-sentence summary of who this candidate seems to be."
       }
     `;
 
