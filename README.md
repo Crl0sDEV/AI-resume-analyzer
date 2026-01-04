@@ -27,4 +27,4 @@ ATS Radar is an AI-powered tool that helps job seekers optimize their resumes fo
 
 1. Clone the repo
    ```bash
-   git clone [https://github.com/yourusername/ats-radar.git](https://github.com/yourusername/ats-radar.git)
+   git clone [https://github.com/Crl0sDEV/AI-resume-analyzer.git](https://github.com/Crl0sDEV/AI-resume-analyzer.git)
