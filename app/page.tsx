@@ -16,6 +16,7 @@ import {
 } from "lucide-react"; 
 import confetti from "canvas-confetti";
 import type { AnalysisResult, InterviewQuestion } from "@/types";
+import { ModeToggle } from "@/components/mode-toggle"; // IMPORT TOGGLE
 
 export default function ResumeAnalyzer() {
   const [file, setFile] = useState<File | null>(null);
@@ -50,7 +51,7 @@ export default function ResumeAnalyzer() {
       particleCount: 150,
       spread: 70,
       origin: { y: 0.6 },
-      zIndex: 9999,
+      zIndex: 9999, 
       colors: ['#22c55e', '#3b82f6', '#f59e0b']
     });
   };
@@ -100,7 +101,6 @@ export default function ResumeAnalyzer() {
   };
 
   const handleDemo = async () => {
-
     const sampleJd = `We are looking for a Senior React Developer with experience in Next.js, Tailwind CSS, and TypeScript. 
     The candidate should have strong knowledge of state management, API integration, and performance optimization. 
     Bonus points for AWS and CI/CD experience.`;
@@ -109,7 +109,6 @@ export default function ResumeAnalyzer() {
     setLoading(true);
 
     try {
-     
       const response = await fetch("/sample-resume.pdf");
       if (!response.ok) throw new Error("Sample resume not found in public folder");
       
@@ -197,6 +196,7 @@ export default function ResumeAnalyzer() {
     }
   };
 
+  // --- HISTORY HELPERS ---
   const clearHistory = () => {
     setHistory([]);
     localStorage.removeItem("resumeHistory");
@@ -210,20 +210,27 @@ export default function ResumeAnalyzer() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans text-slate-900 flex flex-col">
+    // Changed bg-slate-50 to bg-background so it adapts to dark mode
+    <div className="min-h-screen bg-background p-4 md:p-8 font-sans text-foreground flex flex-col transition-colors duration-300">
+      
+      {/* NAVIGATION / HEADER */}
+      <div className="max-w-7xl mx-auto w-full flex justify-end mb-4">
+         <ModeToggle />
+      </div>
+
       <div className="max-w-7xl mx-auto space-y-8 grow w-full">
         
-        {/* Header */}
+        {/* Header Title */}
         <div className="text-center space-y-2 mb-8">
           <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
             ATS Radar
           </h1>
-          <p className="text-slate-500 font-medium">
+          <p className="text-muted-foreground font-medium">
             AI-Powered Resume Optimization & Analytics
           </p>
         </div>
 
-        {/* --- MAIN LAYOUT (GRID) --- */}
+        {/* --- MAIN LAYOUT --- */}
         <div className={`grid gap-8 ${result ? 'lg:grid-cols-2' : 'max-w-3xl mx-auto'}`}>
 
           {/* LEFT COLUMN */}
@@ -253,13 +260,13 @@ export default function ResumeAnalyzer() {
                     type="file" 
                     accept=".pdf"
                     onChange={handleFileChange}
-                    className="cursor-pointer file:text-blue-600 file:font-semibold"
+                    className="cursor-pointer file:text-primary file:font-semibold"
                   />
                 </div>
               </CardContent>
               <CardFooter className="flex flex-col gap-3">
                 <Button 
-                  className="w-full bg-slate-900 hover:bg-slate-800" 
+                  className="w-full" 
                   onClick={handleAnalyze} 
                   disabled={!file || !jd || loading}
                 >
@@ -270,11 +277,10 @@ export default function ResumeAnalyzer() {
                   )}
                 </Button>
 
-                {/* DEMO BUTTON */}
                 {!result && !loading && (
                     <Button 
                         variant="ghost" 
-                        className="w-full text-slate-500 hover:text-blue-600 hover:bg-blue-50"
+                        className="w-full text-muted-foreground hover:text-primary"
                         onClick={handleDemo}
                     >
                         No resume? Try Sample Analysis
@@ -285,9 +291,9 @@ export default function ResumeAnalyzer() {
 
             {/* PDF PREVIEWER */}
             {result && pdfPreviewUrl && (
-              <Card className="hidden lg:block overflow-hidden border-slate-300 shadow-md h-150">
-                 <div className="bg-slate-100 p-2 border-b flex justify-between items-center px-4">
-                    <span className="text-sm font-semibold text-slate-600">Document Preview</span>
+              <Card className="hidden lg:block overflow-hidden border-border shadow-md h-150">
+                 <div className="bg-muted p-2 border-b flex justify-between items-center px-4">
+                    <span className="text-sm font-semibold text-muted-foreground">Document Preview</span>
                  </div>
                  <iframe 
                     src={pdfPreviewUrl} 
@@ -299,10 +305,10 @@ export default function ResumeAnalyzer() {
 
             {/* HISTORY SECTION */}
             {history.length > 0 && (
-              <Card className="bg-white/50 border-slate-200">
+              <Card className="bg-background/50 border-border">
                 <CardHeader className="pb-2 flex flex-row items-center justify-between">
                   <CardTitle className="text-lg flex items-center gap-2">
-                    <History className="w-5 h-5 text-slate-500" /> Recent Scans
+                    <History className="w-5 h-5 text-muted-foreground" /> Recent Scans
                   </CardTitle>
                   <Button variant="ghost" size="sm" onClick={clearHistory} className="text-red-400 hover:text-red-600 h-8">
                     <Trash2 className="w-4 h-4" />
@@ -314,11 +320,11 @@ export default function ResumeAnalyzer() {
                       <div 
                         key={i} 
                         onClick={() => loadFromHistory(item)}
-                        className="flex items-center justify-between p-3 rounded-lg border bg-white hover:bg-slate-50 cursor-pointer transition-colors group"
+                        className="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-muted/50 cursor-pointer transition-colors group"
                       >
                         <div className="flex flex-col">
                            <span className="font-medium text-sm truncate max-w-50">{item.summaryProfile.substring(0, 40)}...</span>
-                           <span className="text-xs text-slate-400">Score: {item.score}/100</span>
+                           <span className="text-xs text-muted-foreground">Score: {item.score}/100</span>
                         </div>
                         <Badge variant={item.matchLevel === "High" ? "default" : "secondary"}>
                           {item.matchLevel}
@@ -337,18 +343,18 @@ export default function ResumeAnalyzer() {
               
               {/* CANDIDATE LEVEL & SALARY */}
               <div className="grid grid-cols-2 gap-4">
-                  <Card className="bg-indigo-50 border-indigo-100 flex items-center p-4 gap-4">
-                      <div className="p-3 bg-indigo-100 rounded-full"><Briefcase className="w-6 h-6 text-indigo-600" /></div>
+                  <Card className="bg-indigo-50 dark:bg-indigo-950/30 border-indigo-100 dark:border-indigo-900 flex items-center p-4 gap-4">
+                      <div className="p-3 bg-indigo-100 dark:bg-indigo-900 rounded-full"><Briefcase className="w-6 h-6 text-indigo-600 dark:text-indigo-400" /></div>
                       <div>
-                          <p className="text-xs text-indigo-600 font-bold uppercase">Candidate Level</p>
-                          <p className="font-bold text-slate-800 text-sm md:text-base">{result.candidateLevel || "N/A"}</p>
+                          <p className="text-xs text-indigo-600 dark:text-indigo-400 font-bold uppercase">Candidate Level</p>
+                          <p className="font-bold text-foreground text-sm md:text-base">{result.candidateLevel || "N/A"}</p>
                       </div>
                   </Card>
-                  <Card className="bg-emerald-50 border-emerald-100 flex items-center p-4 gap-4">
-                      <div className="p-3 bg-emerald-100 rounded-full"><DollarSign className="w-6 h-6 text-emerald-600" /></div>
+                  <Card className="bg-emerald-50 dark:bg-emerald-950/30 border-emerald-100 dark:border-emerald-900 flex items-center p-4 gap-4">
+                      <div className="p-3 bg-emerald-100 dark:bg-emerald-900 rounded-full"><DollarSign className="w-6 h-6 text-emerald-600 dark:text-emerald-400" /></div>
                       <div>
-                          <p className="text-xs text-emerald-600 font-bold uppercase">Est. Salary</p>
-                          <p className="font-bold text-slate-800 text-sm md:text-base">{result.estimatedSalaryRange || "N/A"}</p>
+                          <p className="text-xs text-emerald-600 dark:text-emerald-400 font-bold uppercase">Est. Salary</p>
+                          <p className="font-bold text-foreground text-sm md:text-base">{result.estimatedSalaryRange || "N/A"}</p>
                       </div>
                   </Card>
               </div>
@@ -364,18 +370,18 @@ export default function ResumeAnalyzer() {
                   <TabsContent value="analysis" className="space-y-6 mt-4">
                       
                       {/* Summary */}
-                      <Card className="border-blue-200 bg-blue-50/50 shadow-sm">
+                      <Card className="border-blue-200 dark:border-blue-900 bg-blue-50/50 dark:bg-blue-950/20 shadow-sm">
                         <CardHeader className="pb-2 flex flex-row items-center justify-between">
-                          <CardTitle className="text-lg flex items-center gap-2 text-blue-800">
+                          <CardTitle className="text-lg flex items-center gap-2 text-blue-800 dark:text-blue-400">
                             <Lightbulb className="w-5 h-5" /> Executive Summary
                           </CardTitle>
-                          <Button size="sm" variant="outline" className="bg-white text-blue-600 border-blue-200 hover:bg-blue-50 h-8 text-xs" onClick={handleRewriteSummary} disabled={rewriting}>
+                          <Button size="sm" variant="outline" className="h-8 text-xs" onClick={handleRewriteSummary} disabled={rewriting}>
                               {rewriting ? <Loader2 className="w-3 h-3 animate-spin mr-2"/> : <Wand2 className="w-3 h-3 mr-2" />}
                               Rewrite with AI
                           </Button>
                         </CardHeader>
                         <CardContent>
-                          <p className="text-slate-700 leading-relaxed text-sm md:text-base">
+                          <p className="text-muted-foreground leading-relaxed text-sm md:text-base">
                             {result.summaryProfile}
                           </p>
                         </CardContent>
@@ -383,32 +389,32 @@ export default function ResumeAnalyzer() {
 
                       {/* Score & Breakdown */}
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                          <Card className="flex flex-col items-center justify-center p-6 text-center border-slate-200 shadow-sm">
+                          <Card className="flex flex-col items-center justify-center p-6 text-center border-border shadow-sm">
                               <div className="relative flex items-center justify-center">
-                                  <span className={`text-6xl font-bold ${result.score >= 80 ? 'text-green-600' : result.score >= 50 ? 'text-yellow-600' : 'text-red-600'}`}>
+                                  <span className={`text-6xl font-bold ${result.score >= 80 ? 'text-green-600 dark:text-green-400' : result.score >= 50 ? 'text-yellow-600 dark:text-yellow-400' : 'text-red-600 dark:text-red-400'}`}>
                                     {result.score}
                                   </span>
                               </div>
-                              <p className="text-sm text-slate-500 mt-2 font-medium uppercase tracking-wide">ATS Score</p>
+                              <p className="text-sm text-muted-foreground mt-2 font-medium uppercase tracking-wide">ATS Score</p>
                           </Card>
 
                           <Card className="col-span-1 md:col-span-2 p-6 flex flex-col justify-center gap-5 shadow-sm">
                               <div className="space-y-1">
-                                  <div className="flex justify-between text-xs uppercase font-bold text-slate-500">
+                                  <div className="flex justify-between text-xs uppercase font-bold text-muted-foreground">
                                       <span>Skills Match</span>
                                       <span>{result.breakdown.skillsMatch}%</span>
                                   </div>
                                   <Progress value={result.breakdown.skillsMatch} className="h-2" />
                               </div>
                               <div className="space-y-1">
-                                  <div className="flex justify-between text-xs uppercase font-bold text-slate-500">
+                                  <div className="flex justify-between text-xs uppercase font-bold text-muted-foreground">
                                       <span>Experience Match</span>
                                       <span>{result.breakdown.experienceMatch}%</span>
                                   </div>
                                   <Progress value={result.breakdown.experienceMatch} className="h-2" />
                               </div>
                               <div className="space-y-1">
-                                  <div className="flex justify-between text-xs uppercase font-bold text-slate-500">
+                                  <div className="flex justify-between text-xs uppercase font-bold text-muted-foreground">
                                       <span>Formatting</span>
                                       <span>{result.breakdown.formatting}%</span>
                                   </div>
@@ -418,18 +424,18 @@ export default function ResumeAnalyzer() {
                       </div>
 
                       {/* Action Plan */}
-                      <Card className="border-green-200 bg-green-50/30 shadow-sm">
+                      <Card className="border-green-200 dark:border-green-900 bg-green-50/30 dark:bg-green-950/20 shadow-sm">
                           <CardHeader>
-                              <CardTitle className="flex items-center gap-2 text-green-800">
+                              <CardTitle className="flex items-center gap-2 text-green-800 dark:text-green-400">
                                   <TrendingUp className="w-5 h-5" /> Priority Fixes
                               </CardTitle>
                           </CardHeader>
                           <CardContent>
                               <div className="grid gap-3">
                                   {result.actionPlan.map((action, i) => (
-                                      <div key={i} className="flex items-start gap-3 p-3 bg-white rounded-lg border border-green-100 shadow-sm">
-                                          <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 shrink-0" />
-                                          <span className="text-sm text-slate-700 font-medium">{action}</span>
+                                      <div key={i} className="flex items-start gap-3 p-3 bg-card rounded-lg border border-green-100 dark:border-green-900 shadow-sm">
+                                          <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400 mt-0.5 shrink-0" />
+                                          <span className="text-sm text-foreground font-medium">{action}</span>
                                       </div>
                                   ))}
                               </div>
@@ -446,21 +452,21 @@ export default function ResumeAnalyzer() {
                           <CardContent>
                               <div className="space-y-4">
                                 <div>
-                                    <span className="text-xs font-semibold text-slate-400 uppercase mb-2 block">Technical / Hard Skills</span>
+                                    <span className="text-xs font-semibold text-muted-foreground uppercase mb-2 block">Technical / Hard Skills</span>
                                     <div className="flex flex-wrap gap-2">
                                         {result.missingKeywords.hardSkills.length > 0 ? (
                                             result.missingKeywords.hardSkills.map((k, i) => (
-                                                <Badge key={i} variant="outline" className="border-red-200 text-red-700 bg-red-50">
+                                                <Badge key={i} variant="outline" className="border-red-200 dark:border-red-900 text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-950/30">
                                                     {k}
                                                 </Badge>
                                             ))
                                         ) : (
-                                            <span className="text-sm text-slate-400 italic">No missing hard skills detected.</span>
+                                            <span className="text-sm text-muted-foreground italic">No missing hard skills detected.</span>
                                         )}
                                     </div>
                                 </div>
                                 <div>
-                                    <span className="text-xs font-semibold text-slate-400 uppercase mb-2 block">Soft Skills</span>
+                                    <span className="text-xs font-semibold text-muted-foreground uppercase mb-2 block">Soft Skills</span>
                                     <div className="flex flex-wrap gap-2">
                                         {result.missingKeywords.softSkills.length > 0 ? (
                                             result.missingKeywords.softSkills.map((k, i) => (
@@ -469,7 +475,7 @@ export default function ResumeAnalyzer() {
                                                 </Badge>
                                             ))
                                         ) : (
-                                            <span className="text-sm text-slate-400 italic">No missing soft skills.</span>
+                                            <span className="text-sm text-muted-foreground italic">No missing soft skills.</span>
                                         )}
                                     </div>
                                 </div>
@@ -483,7 +489,7 @@ export default function ResumeAnalyzer() {
                       <Card>
                           <CardHeader>
                               <CardTitle className="flex items-center gap-2">
-                                  <MessageSquare className="w-5 h-5 text-purple-600" /> 
+                                  <MessageSquare className="w-5 h-5 text-purple-600 dark:text-purple-400" /> 
                                   Tailored Interview Questions
                               </CardTitle>
                               <CardDescription>
@@ -493,8 +499,8 @@ export default function ResumeAnalyzer() {
                           <CardContent className="space-y-4">
                               {interviewQuestions.length === 0 ? (
                                   <div className="text-center py-8">
-                                      <p className="text-slate-500 mb-4">Want to know what they&apos;ll ask you?</p>
-                                      <Button onClick={handleGenerateInterview} disabled={interviewLoading} className="bg-purple-600 hover:bg-purple-700">
+                                      <p className="text-muted-foreground mb-4">Want to know what they&apos;ll ask you?</p>
+                                      <Button onClick={handleGenerateInterview} disabled={interviewLoading} className="bg-purple-600 hover:bg-purple-700 text-white">
                                           {interviewLoading ? <Loader2 className="animate-spin mr-2" /> : <Wand2 className="mr-2 h-4 w-4" />}
                                           Generate Questions
                                       </Button>
@@ -502,9 +508,9 @@ export default function ResumeAnalyzer() {
                               ) : (
                                   <div className="space-y-4">
                                       {interviewQuestions.map((q, i) => (
-                                          <div key={i} className="p-4 bg-slate-50 rounded-lg border border-slate-200">
-                                              <p className="font-semibold text-slate-800 mb-2">Q: {q.question}</p>
-                                              <div className="text-sm text-slate-600 flex gap-2">
+                                          <div key={i} className="p-4 bg-card rounded-lg border border-border">
+                                              <p className="font-semibold text-foreground mb-2">Q: {q.question}</p>
+                                              <div className="text-sm text-muted-foreground flex gap-2">
                                                   <Lightbulb className="w-4 h-4 text-yellow-500 shrink-0 mt-0.5" />
                                                   <span className="italic">Tip: {q.tip}</span>
                                               </div>
@@ -526,13 +532,13 @@ export default function ResumeAnalyzer() {
       </div>
 
       {/* FOOTER */}
-      <footer className="mt-12 text-center text-slate-400 text-sm py-6 border-t border-slate-100">
+      <footer className="mt-12 text-center text-muted-foreground text-sm py-6 border-t border-border">
         <p>
           Built with Next.js, Gemini AI & Shadcn UI by{" "}
           <a 
             href="https://carlos-miguel-sandrino-portfolio.vercel.app/"
             target="_blank" 
-            className="font-medium text-blue-600 hover:underline"
+            className="font-medium text-primary hover:underline"
           >
             Carlos Sandrino
           </a>
