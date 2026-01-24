@@ -26,8 +26,6 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
     const { type, context } = body; 
-    // type = 'rewrite' | 'interview'
-    // context = object containing JD, Resume Summary, etc.
 
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
     let prompt = "";
