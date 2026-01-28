@@ -196,7 +196,6 @@ export default function ResumeAnalyzer() {
     }
   };
 
-  // --- HISTORY HELPERS ---
   const clearHistory = () => {
     setHistory([]);
     localStorage.removeItem("resumeHistory");
@@ -210,7 +209,7 @@ export default function ResumeAnalyzer() {
   };
 
   return (
-    // Changed bg-slate-50 to bg-background so it adapts to dark mode
+
     <div className="min-h-screen bg-background p-4 md:p-8 font-sans text-foreground flex flex-col transition-colors duration-300">
       
       {/* NAVIGATION / HEADER */}
