@@ -483,7 +483,6 @@ export default function ResumeAnalyzer() {
                       </Card>
                   </TabsContent>
 
-                  {/* TAB 2: INTERVIEW PREP */}
                   <TabsContent value="interview" className="mt-4">
                       <Card>
                           <CardHeader>
