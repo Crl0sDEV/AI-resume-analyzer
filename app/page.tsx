@@ -368,7 +368,6 @@ export default function ResumeAnalyzer() {
                   {/* TAB 1: MAIN ANALYSIS */}
                   <TabsContent value="analysis" className="space-y-6 mt-4">
                       
-                      {/* Summary */}
                       <Card className="border-blue-200 dark:border-blue-900 bg-blue-50/50 dark:bg-blue-950/20 shadow-sm">
                         <CardHeader className="pb-2 flex flex-row items-center justify-between">
                           <CardTitle className="text-lg flex items-center gap-2 text-blue-800 dark:text-blue-400">
@@ -386,7 +385,6 @@ export default function ResumeAnalyzer() {
                         </CardContent>
                       </Card>
 
-                      {/* Score & Breakdown */}
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                           <Card className="flex flex-col items-center justify-center p-6 text-center border-border shadow-sm">
                               <div className="relative flex items-center justify-center">
