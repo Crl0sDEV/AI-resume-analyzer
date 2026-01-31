@@ -336,11 +336,9 @@ export default function ResumeAnalyzer() {
             )}
           </div>
 
-          {/* RIGHT COLUMN: Results Dashboard */}
           {result && (
             <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
               
-              {/* CANDIDATE LEVEL & SALARY */}
               <div className="grid grid-cols-2 gap-4">
                   <Card className="bg-indigo-50 dark:bg-indigo-950/30 border-indigo-100 dark:border-indigo-900 flex items-center p-4 gap-4">
                       <div className="p-3 bg-indigo-100 dark:bg-indigo-900 rounded-full"><Briefcase className="w-6 h-6 text-indigo-600 dark:text-indigo-400" /></div>
