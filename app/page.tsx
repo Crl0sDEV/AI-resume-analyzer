@@ -288,7 +288,6 @@ export default function ResumeAnalyzer() {
               </CardFooter>
             </Card>
 
-            {/* PDF PREVIEWER */}
             {result && pdfPreviewUrl && (
               <Card className="hidden lg:block overflow-hidden border-border shadow-md h-150">
                  <div className="bg-muted p-2 border-b flex justify-between items-center px-4">
@@ -302,7 +301,6 @@ export default function ResumeAnalyzer() {
               </Card>
             )}
 
-            {/* HISTORY SECTION */}
             {history.length > 0 && (
               <Card className="bg-background/50 border-border">
                 <CardHeader className="pb-2 flex flex-row items-center justify-between">
