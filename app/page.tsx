@@ -232,10 +232,8 @@ export default function ResumeAnalyzer() {
         {/* --- MAIN LAYOUT --- */}
         <div className={`grid gap-8 ${result ? 'lg:grid-cols-2' : 'max-w-3xl mx-auto'}`}>
 
-          {/* LEFT COLUMN */}
           <div className="space-y-6">
             
-            {/* Upload Card */}
             <Card className={result ? "h-fit" : ""}>
               <CardHeader>
                 <CardTitle>{result ? "New Analysis" : "Upload Details"}</CardTitle>
