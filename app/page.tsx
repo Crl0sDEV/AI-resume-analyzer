@@ -219,7 +219,6 @@ export default function ResumeAnalyzer() {
 
       <div className="max-w-7xl mx-auto space-y-8 grow w-full">
         
-        {/* Header Title */}
         <div className="text-center space-y-2 mb-8">
           <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
             ATS Radar
@@ -229,7 +228,6 @@ export default function ResumeAnalyzer() {
           </p>
         </div>
 
-        {/* --- MAIN LAYOUT --- */}
         <div className={`grid gap-8 ${result ? 'lg:grid-cols-2' : 'max-w-3xl mx-auto'}`}>
 
           <div className="space-y-6">
