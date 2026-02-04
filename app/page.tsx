@@ -212,7 +212,6 @@ export default function ResumeAnalyzer() {
 
     <div className="min-h-screen bg-background p-4 md:p-8 font-sans text-foreground flex flex-col transition-colors duration-300">
       
-      {/* NAVIGATION / HEADER */}
       <div className="max-w-7xl mx-auto w-full flex justify-end mb-4">
          <ModeToggle />
       </div>
